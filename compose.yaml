@@ -1,0 +1,29 @@
+version: "3.8"
+
+services: 
+  app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - 3000:3000
+    volumes: 
+      - .:/app
+      - '/app/node_modules'
+    depends_on: 
+      - mysql_db
+    environment:
+      - DATABASE_DB=database
+      - DATABASE_USER=database_user
+      - DATABASE_PASSWORD=database_password
+      - DATABASE_HOST=mysql_db
+  
+  mysql_db:
+    image: mysql:8.0
+    environment: 
+      - MYSQL_DATABASE=database
+      - MYSQL_USER=database_user
+      - MYSQL_PASSWORD=database_password
+      - MYSQL_ROOT_PASSWORD=database_root_password
+
+    
