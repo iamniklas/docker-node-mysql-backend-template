@@ -1,14 +1,14 @@
 version: "3.8"
 
 services: 
-  app:
+  node:
     build: 
-      context: .
+      context: backend
       dockerfile: Dockerfile
     ports: 
       - 3000:3000
     volumes: 
-      - .:/app
+      - ./backend:/app
       - '/app/node_modules'
     depends_on: 
       - mysql_db
