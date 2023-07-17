@@ -1,7 +1,7 @@
 version: "3.8"
 
 services: 
-  node:
+  node_server:
     build: 
       context: backend
       dockerfile: Dockerfile
@@ -25,5 +25,6 @@ services:
       - MYSQL_USER=database_user
       - MYSQL_PASSWORD=database_password
       - MYSQL_ROOT_PASSWORD=database_root_password
-
+    volumes:
+      - "./mysql/init/database_initialize.sql:/docker-entrypoint-initdb.d/1.sql"
     
