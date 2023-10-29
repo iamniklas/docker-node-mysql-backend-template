@@ -14,35 +14,14 @@ const morgan = require("morgan");
 
 const database = require("./database");
 
-// Appi
+// API
 const app = express();
 
 app.use(morgan("common"));
 
-app.get("/", function(req, res, next) {
-  database.raw('select VERSION() version')
-      .then(([rows, columns]) => rows[0])
-      .then((row) => res.json({ message: `Hello from MySQL ${row.version}` }))    
-      .catch(next);
-});
-
-app.get("/employees", function(req, res, next) {
-  database.raw('SELECT id, first_name, last_name, date_of_employment from Employees;')
-  .then(([rows, columns]) => res.json(rows))
-  .catch(next);
-});
-
-app.get("/example", function(req, res, next) {
-  database.raw('SELECT id, info from Example_Table;')
-  .then(([rows, columns]) => res.json(rows))
-  .catch(next);
-});
-
-app.get("/status", function(req, res) {
-  // do app logic here to determine if app is truly healthy
-  // you should return 200 if healthy, and anything else will fail
-  // if you want, you should be able to restrict this to localhost (include ipv4 and ipv6)
-  res.json({message: 'OK', status_code: 200});
-});
+require('./routes/index')(app);
+require('./routes/employees')(app);
+require('./routes/example')(app);
+require('./routes/status')(app);
 
 module.exports = app;
