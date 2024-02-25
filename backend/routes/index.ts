@@ -9,16 +9,26 @@ interface VersionRow {
 
 export default function setupRoutes(app: Express) {
   app.get("/", (req: Request, res: Response, next: NextFunction) => {
-    db.raw<VersionRow[]>('SELECT VERSION() version')
-      .then(result => {
-        const rows = result[0];
-        if (result.length > 0) {
-          const row = result[0];
-          res.json({ message: `Hello from MySQL ${row.version}` });
-        } else {
-          throw new Error('No version information found');
-        }
-      })
-      .catch(next);
+    db.raw('SELECT VERSION() as version')
+  .then((result) => {
+    // Accessing the result correctly depends on the structure of the returned data
+    // The structure can vary based on the database driver or ORM you're using
+    let versionRow;
+    if (Array.isArray(result)) {
+      // For some configurations, the actual result is in the first element of the array
+      versionRow = result[0][0]; // Adjust based on your result structure
+    } else {
+      // Directly accessing the result if it's not an array
+      versionRow = result[0];
+    }
+
+    if (versionRow) {
+      res.json({ message: `Hello from MySQL ${versionRow.version}` });
+    } else {
+      throw new Error('No version information found');
+    }
+  })
+  .catch(next);
+
   });
 }

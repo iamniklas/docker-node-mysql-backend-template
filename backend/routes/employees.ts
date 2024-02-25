@@ -12,10 +12,13 @@ interface EmployeeRow {
 
 export default function setupEmployeeRoutes(app: Express) {
   app.get("/employees", (req: Request, res: Response, next: NextFunction) => {
-    db.raw<EmployeeRow[]>('SELECT id, first_name, last_name, date_of_employment from Employees;')
-      .then(([rows, columns]) => {
-        res.json(rows);
+    db // Specifies the table to query
+      .select('id', 'first_name', 'last_name', 'date_of_employment') // Specifies the columns to retrieve
+      .from('Employees')
+      .then(rows => {
+        const typedRows: EmployeeRow[] = rows as EmployeeRow[];
+        res.json(typedRows); // Sends the result back as JSON
       })
-      .catch(next);
+      .catch(next); // Error handling
   });
 }

@@ -9,10 +9,12 @@ interface ExampleRow {
 
 export default function setupExampleRoute(app: Express) {
   app.get("/example", (req: Request, res: Response, next: NextFunction) => {
-    db.raw<ExampleRow[]>('SELECT id, info FROM Example_Table;')
+    db
+      .select('id', 'info')
+      .from('Example_Table')
       .then(result => {
         const [rows] = result;
-        res.json(rows);
+        res.json(result);
       })
       .catch(next);
   });
